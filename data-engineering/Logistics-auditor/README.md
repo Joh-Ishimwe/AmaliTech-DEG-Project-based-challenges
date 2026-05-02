@@ -1,165 +1,66 @@
-# Project Brief: The "Last Mile" Logistics Auditor
+# Veridi Logistics — Delivery Performance Audit
 
-**Client:** Veridi Logistics (Global E-Commerce Aggregator)
-**Deliverable:** Public Dashboard, Code Notebook & Insight Presentation
-
----
-
-## 1. Business Context
-
-**Veridi Logistics** manages shipping for thousands of online sellers. Recently, the CEO has noticed a spike in negative customer reviews. She has a "gut feeling" that the problem isn't just that packages are late, but that the estimated delivery dates provided to customers are wildly inaccurate (i.e., we are over-promising and under-delivering).
-
-She needs you to audit the delivery data to find the root cause. She specifically wants to know: **"Are we failing specific regions, or is this a nationwide problem?"**
-
-Your job is to build a "Delivery Performance" audit tool that connects the dots between **Logistics Data** (when a package arrived) and **Customer Sentiment** (how they rated the experience).
-
-## 2. The Data
-
-You will use the **Olist E-Commerce Dataset**, a real commercial dataset from a Brazilian marketplace. This is a relational database dump, meaning the data is split across multiple CSV files.
-
-- **Source:** [Kaggle - Olist Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
-- **Key Files to Use:**
-  - `olist_orders_dataset.csv` (The central table)
-  - `olist_order_reviews_dataset.csv` (Sentiment)
-  - `olist_customers_dataset.csv` (Location)
-  - `olist_products_dataset.csv` (Categories)
-
-## 3. Tooling Requirements
-
-You have the flexibility to choose your development environment:
-
-- **Option A (Recommended):** Use a cloud-hosted notebook like **Google Colab**, or **Deepnote**, etc.
-- **Option B:** Use a local **Jupyter Notebook** or **VS Code**.
-  - _Condition:_ If you choose this, you must ensure your code is reproducible. Do not reference local file paths (e.g., `C:/Downloads/...`). Assume the dataset is in the same folder as your notebook.
-- **Dashboarding:** The final output must be a **publicly accessible link** (e.g., Tableau Public, Google Looker Studio, Streamlit Cloud, or PowerBI Web, etc.).
+> **AmaliTech Data Engineering Graduate Programme · DEG Challenge**
+> Candidate: Josiane Ishimwe
 
 ---
 
-## 4. User Stories & Acceptance Criteria
+## A. Executive Summary
 
-### Story 1: The Schema Builder
-
-**As a** Data Engineer,
-**I want** to join the Orders, Reviews, and Customers tables into a single master dataset,
-**So that** I can analyze a customer's location and their review score in the same row.
-
-- **Acceptance Criteria:**
-  - Load the raw CSVs into your notebook.
-  - Perform the correct joins (e.g., join Reviews to Orders on `order_id`, join Customers to Orders on `customer_id`).
-  - **Check:** Ensure you don't accidentally duplicate rows (a common error with 1-to-many joins).
-
-### Story 2: The "Real" Delay Calculator
-
-**As a** Logistics Manager,
-**I want** to know the difference between the "Estimated Delivery Date" and the "Actual Delivery Date,"
-**So that** I can see how often we are lying to customers.
-
-- **Acceptance Criteria:**
-  - Create a new calculated column: `Days_Difference` = `order_estimated_delivery_date` - `order_delivered_customer_date`.
-  - Classify orders into statuses: "On Time", "Late", and "Super Late" (> 5 days late).
-  - Handle missing values: Some orders were never delivered (`order_status` = 'canceled' or 'unavailable'). These should be excluded or flagged separately.
-
-### Story 3: The Geographic Heatmap
-
-**As a** Regional Director,
-**I want** to see which specific States (`customer_state`) have the highest percentage of late deliveries,
-**So that** I can focus my repair efforts on the worst regions.
-
-- **Acceptance Criteria:**
-  - Calculate the % of late orders per State.
-  - Visualize this on a map or a bar chart.
-  - **Insight:** Identify if "Remote" states (far from the distribution center) are disproportionately affected.
-
-### Story 4: The Sentiment Correlation
-
-**As a** Customer Success Lead,
-**I want** to see if late deliveries actually cause bad reviews,
-**So that** I can prove to the CEO that logistics is the problem.
-
-- **Acceptance Criteria:**
-  - Create a visualization comparing "Delivery Delay (Days)" vs "Average Review Score (1-5)".
-  - Show the average review score for "On Time" orders vs. "Late" orders.
+An audit of 99,441 orders from the Olist Brazilian E-Commerce Dataset reveals that while **91.9% of deliveries arrive on time**, the 8.1% that are late create outsized reputational damage — super-late orders (5+ days past the promised date) score just **1.78 / 5** on average, a 58% collapse compared to on-time orders (4.29 / 5). The problem is not nationwide: it is heavily concentrated in **Northeast Brazil**, where states like Alagoas (AL, 23.9%), Maranhão (MA, 22.1%), and Piauí (PI, 20.4%) record late rates more than 8 percentage points above the national average of 8.1%, consistent with their distance from São Paulo's main distribution hub. At the product level, categories such as **audio** and **fashion underwear** combine high late rates with near-1-star reviews, making them the highest-priority targets for operational intervention. The CEO's gut feeling is confirmed by data: Veridi is over-promising and under-delivering, and the fix is geographic and category-specific, not a blanket nationwide programme.
 
 ---
 
-## 5. Bonus User Story: The "Translation" Challenge
+## B. Project Links
 
-**As a** Global Analyst,
-**I want** to see product categories in **English**, not Portuguese,
-**So that** I can understand if "Furniture" is harder to ship than "Electronics".
+| Deliverable | Link |
+|---|---|
+| Notebook (Google Colab) | *https://drive.google.com/file/d/117iLH9OEBEc2l7FfIun__Erpbhqvdi2i/view?usp=sharing* |
+| Dashboard | *https://public.tableau.com/app/profile/josiane.ishimwe/viz/Veridi_Logistics_Delivery_Audit_Josiane/Sheet2#2* |
+| Presentation (PDF/PPT) | *https://docs.google.com/presentation/d/19vidzTTFZYkByt1gQAmSruEPnyMOoljUS8Nphew9rk4/edit?usp=sharing* |
 
-- **Acceptance Criteria:**
-  - The `product_category_name` is in Portuguese (e.g., `cama_mesa_banho`).
-  - Use the `product_category_name_translation.csv` file included in the dataset (or create your own mapping) to translate these into English for your final dashboard.
-
----
-
-## 6. The "Candidate's Choice" Challenge
-
-**As a** Creative Problem Solver,
-**I want** to include one extra feature or analysis that adds specific business value,
-**So that** I can demonstrate my ability to think beyond the basic requirements.
-
-- **Instructions:**
-  - Add one more metric, chart, or drill-down.
-  - **Requirement:** You must justify _why_ this feature matters to the business in your README.
 
 ---
 
-## 7. Submission Guidelines
+## C. Technical Explanation
 
-Please edit this `README.md` file in your forked repository to include the following three sections at the top:
+### Data Cleaning
 
-### A. The Executive Summary
+The raw Olist dataset is a relational dump across six CSV files. The cleaning pipeline addressed three main issues:
 
-- A 3-5 sentence summary of your findings.
+**1. Fan-out prevention (items table)**
+The `olist_order_items_dataset.csv` has one row per product per order. An order with three items has three rows — joining this directly to orders would triple the row count. Fix: `drop_duplicates(subset="order_id", keep="first")` before merging, reducing 112,650 item rows to one per order.
 
-### B. Project Links
+**2. Duplicate reviews**
+A small number of orders had two review entries (customers who edited their score). Fix: sort descending on `review_answer_timestamp` and `drop_duplicates(subset="order_id", keep="first")`, keeping only the most recent review. This removed 610 duplicate entries.
 
-- **Link to Notebook:** (e.g., Google Colab, etc.). _Ensure sharing permissions are set to "Anyone with the link can view"._
-- **Link to Dashboard:** (e.g., Tableau Public, etc.).
-- **Link to Presentation:** A link to a short slide deck (PDF/PPT) AND (Optional) a 2-minute video walkthrough (YouTube) explaining your results.
+**3. Datetime conversion and status filtering**
+All five date columns were stored as plain text. They were converted via `pd.to_datetime(..., errors="coerce")`, which safely coerces any malformed values to `NaT` instead of raising an error. Only orders with `order_status == "delivered"` were kept for delay analysis — cancelled, unavailable, and in-transit orders have no actual delivery date and were excluded rather than imputed.
 
-### C. Technical Explanation
+**4. Delay classification**
+`days_difference = order_estimated_delivery_date − order_delivered_customer_date`
 
-- Briefly explain how you handled the "Data Cleaning".
-- Explain your "Candidate's Choice" addition.
+| Value | Status |
+|---|---|
+| ≥ 0 | On Time (arrived on or before the promised date) |
+| −5 to −1 | Late (1–5 days past the promise) |
+| < −5 | Super Late (more than 5 days past the promise) |
 
-**Important Note on Code Submission:**
+**5. Join integrity assertion**
+After chaining five left-joins, the final master DataFrame is asserted to have the same row count as the source `orders` table. This assertion acts as an automated data quality gate — if any join accidentally fans out, the notebook fails loudly rather than silently producing inflated counts.
 
-- Upload your `.ipynb` notebook file to the repo.
-- **Crucial:** Also upload an **HTML or PDF export** of your notebook so we can see your charts even if GitHub fails to render the notebook code.
-- Once you are ready, please fill out the [Official Submission Form Here](https://forms.cloud.microsoft/e/CeQN2mCyUr) with your links
+---
+
+### Candidate's Choice — Product Category Risk Matrix
+
+**Feature:** A dual-encoded bar chart showing the top 15 product categories by late delivery rate, where bar *height* encodes the late rate (%) and bar *colour* encodes the average review score (red < 2.5 · amber 2.5–3.5 · green > 3.5).
+
+**Business justification:** Not all lateness hurts equally. A category with a 15% late rate where customers still leave 4-star reviews (perhaps because the product is a non-urgent gift) is very different from a category with the same late rate but 2-star reviews. The dual-encoding surfaces this nuance in a single view — a red + tall bar means high lateness *and* low satisfaction, making it the unambiguous priority for operational action.
+
+The analysis found that **audio** and **fashion underwear/beach** sit in the "worst quadrant" (high late rate + lowest review scores), while categories like **fashion bags** maintain moderate scores despite similar late rates, suggesting customers are more forgiving for fashion accessories. This nuance means a one-size-fits-all SLA policy would misallocate resources — the operations team should target red bars first.
+
+**Translation note (Bonus Story):** All product category names were translated from Portuguese to English using the `product_category_name_translation.csv` file included in the dataset, joined on `product_category_name`. Any unmatched categories were labelled `"Unknown"` and excluded from the category chart to keep it clean.
 
 ---
 
-## 🛑 CRITICAL: Pre-Submission Checklist
-
-**Before you submit your form, you MUST complete this checklist.**
-
-> ⚠️ **WARNING:** If you miss any of these items, your submission will be flagged as "Incomplete" and you will **NOT** be invited to an interview.
->
-> **We do not accept "permission error" excuses. Test your links in Incognito Mode.**
-
-### 1. Repository & Code Checks
-
-- [ ] **My GitHub Repo is Public.** (Open the link in a Private/Incognito window to verify).
-- [ ] **I have uploaded the `.ipynb` notebook file.**
-- [ ] **I have ALSO uploaded an HTML or PDF export** of the notebook.
-- [ ] **I have NOT uploaded the massive raw dataset.** (Use `.gitignore` or just don't commit the CSV).
-- [ ] **My code uses Relative Paths.**
-
-### 2. Deliverable Checks
-
-- [ ] **My Dashboard link is publicly accessible.** (No login required).
-- [ ] **My Presentation link is publicly accessible.** (Permissions set to "Anyone with the link can view").
-- [ ] **I have updated this `README.md` file** with my Executive Summary and technical notes.
-
-### 3. Completeness
-
-- [ ] I have completed **User Stories 1-4**.
-- [ ] I have completed the **"Candidate's Choice"** challenge and explained it in the README.
-
-**✅ Only when you have checked every box above, proceed to the submission form.**
-
----
+*Dataset: [Olist Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) · License: CC BY-NC-SA 4.0*
